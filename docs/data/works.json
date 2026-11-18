@@ -36,6 +36,111 @@
   },
   "works": [
     {
+      "id": "w-95w91c",
+      "title": "Фітнес - пробне тренування",
+      "category": "reels",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/fitnes-probne-trenuvannia-1-479a11.webp",
+          "poster": "media/fitnes-probne-trenuvannia-1-479a11.webp",
+          "w": 1440,
+          "h": 2560,
+          "original": "Фітнес - пробне тренування (1).png"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": "w-lpj61m",
+      "title": "Манікюр - вільні віконця",
+      "category": "reels",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/manikiur-vilni-vikontsia-1-854bfb.webp",
+          "poster": "media/manikiur-vilni-vikontsia-1-854bfb.webp",
+          "w": 1440,
+          "h": 2560,
+          "original": "Манікюр - вільні віконця (1).png"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": "w-5m410v",
+      "title": "Онлайн-школа - інтерактив",
+      "category": "stories",
+      "client": "",
+      "year": "2026",
+      "description": "Онлайн-школа - інтерактив",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/onlain-shkola-interaktyv-1-f3942a.webp",
+          "poster": "media/onlain-shkola-interaktyv-1-f3942a.webp",
+          "w": 1440,
+          "h": 2560,
+          "original": "Онлайн-школа — інтерактив (1).png"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": "w-37mzxt",
+      "title": "Нерухомість",
+      "category": "stories",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/nerukhomist-ob-iekt-tyzhnia-1-a30a32.webp",
+          "poster": "media/nerukhomist-ob-iekt-tyzhnia-1-a30a32.webp",
+          "w": 1440,
+          "h": 2560,
+          "original": "Нерухомість — об’єкт тижня (1).png"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": "w-hhj7xv",
+      "title": "Кав’ярня — новинка сезону",
+      "category": "stories",
+      "client": "Кав’ярня",
+      "year": "2026",
+      "description": "Сторіс акціі",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/kav-iarnia-novynka-sezonu-1-c2a0d4.webp",
+          "poster": "media/kav-iarnia-novynka-sezonu-1-c2a0d4.webp",
+          "w": 1440,
+          "h": 2560,
+          "original": "Кав’ярня — новинка сезону (1).png"
+        }
+      ],
+      "hidden": false
+    },
+    {
       "id": "w-5ltw4c",
       "title": "Моушен-кліп до пісні",
       "category": "youtube",
