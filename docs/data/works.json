@@ -23,7 +23,8 @@
       "stories": "Сторіс",
       "carousels": "Каруселі",
       "landings": "Лендінги",
-      "youtube": "YouTube моушн"
+      "youtube": "YouTube моушн",
+      "instagram-moushn": "Instagram моушн"
     },
     "services": {
       "reels": "Монтаж, моушн, субтитри",
@@ -31,7 +32,8 @@
       "stories": "Прогріви та анонси",
       "carousels": "Експертні пости",
       "landings": "Дизайн і верстка",
-      "youtube": "Моушн-графіка та монтаж для YouTube"
+      "youtube": "Моушн-графіка та монтаж для YouTube",
+      "instagram-moushn": "Моушн-графіка та монтаж під аудіо клієнта"
     }
   },
   "works": [
@@ -249,7 +251,7 @@
     {
       "id": "w-05ccch",
       "title": "Моушн-рілс «Хтось оплатив»",
-      "category": "reels",
+      "category": "instagram-moushn",
       "client": "",
       "year": "2026",
       "description": "",
@@ -265,12 +267,13 @@
           "duration": 22.1,
           "original": "1.mp4"
         }
-      ]
+      ],
+      "hidden": false
     },
     {
       "id": "w-06npgk",
       "title": "Моушн-рілс «Не так просто»",
-      "category": "reels",
+      "category": "instagram-moushn",
       "client": "",
       "year": "2026",
       "description": "",
@@ -286,12 +289,13 @@
           "duration": 20.4,
           "original": "2.mp4"
         }
-      ]
+      ],
+      "hidden": false
     },
     {
       "id": "w-07ucrt",
       "title": "Моушн-рілс «Правильно»",
-      "category": "reels",
+      "category": "instagram-moushn",
       "client": "",
       "year": "2026",
       "description": "",
@@ -307,7 +311,8 @@
           "duration": 21.3,
           "original": "3.mp4"
         }
-      ]
+      ],
+      "hidden": false
     },
     {
       "id": "w-08cwdr",
