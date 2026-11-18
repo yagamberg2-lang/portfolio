@@ -38,6 +38,28 @@
   },
   "works": [
     {
+      "id": "w-4lfl37",
+      "title": "Оренда інструменту",
+      "category": "instagram-moushn",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/reklama-1-1-26809c.mp4",
+          "poster": "media/reklama-1-1-26809c.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 24.1,
+          "original": "реклама(1) (1).mp4"
+        }
+      ],
+      "hidden": false
+    },
+    {
       "id": "w-95w91c",
       "title": "Фітнес - пробне тренування",
       "category": "stories",
