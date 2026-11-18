@@ -143,6 +143,17 @@ function safeJoin(base, rel) {
 const json = (res, code, obj) => { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(obj)); };
 const readBody = (req) => new Promise((ok, bad) => { let b = ''; req.setEncoding('utf8'); req.on('data', c => b += c); req.on('end', () => { try { ok(b ? JSON.parse(b) : {}); } catch (e) { bad(e); } }); });
 
+// Мітка версії для файлів сайту, щоб браузери клієнтів не показували стару версію з кешу
+async function bumpVersion() {
+  const v = Date.now().toString(36);
+  const files = [[path.join(DOCS, 'index.html'), /(assets\/(?:style\.css|app\.js))(\?v=[\w]+)?/g], [path.join(DOCS, 'assets', 'app.js'), /(\.\/scene\.js)(\?v=[\w]+)?/g]];
+  for (const [f, re] of files) {
+    const s = await fsp.readFile(f, 'utf8');
+    const n = s.replace(re, `$1?v=${v}`);
+    if (n !== s) await fsp.writeFile(f, n, 'utf8');
+  }
+}
+
 // Черга обробки — по одному файлу, щоб не перевантажувати ПК
 let queue = Promise.resolve();
 const enqueue = (fn) => (queue = queue.then(fn, fn));
@@ -189,6 +200,7 @@ const server = http.createServer(async (req, res) => {
 
     if (p === '/api/publish' && req.method === 'POST') {
       const log = [];
+      await bumpVersion();
       const step = async (args) => { const r = await run('git', args); log.push('$ git ' + args.join(' ') + '\n' + (r.out + r.err).trim()); return r; };
       await step(['add', '-A']);
       const stamp = new Date().toLocaleString('uk-UA');

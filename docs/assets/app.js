@@ -322,7 +322,7 @@ function initChrome() {
 let scene = null;
 async function init3D() {
   try {
-    const { createScene } = await import('./scene.js');
+    const { createScene } = await import('./scene.js?v=mwm91uff');
     scene = await createScene({
       canvas: $('#gl'), works: WORKS, state, isTouch, reduced,
       onOpen: id => openWork(id),
