@@ -36,6 +36,28 @@
   },
   "works": [
     {
+      "id": "w-5ltw4c",
+      "title": "Моушен-кліп до пісні",
+      "category": "youtube",
+      "client": "",
+      "year": "2026",
+      "description": "Snippet к релізу трека",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/potom-promo-final-1080p60-437949.mp4",
+          "poster": "media/potom-promo-final-1080p60-437949.jpg",
+          "w": 1280,
+          "h": 720,
+          "duration": 15,
+          "original": "POTOM_promo_final_1080p60.mp4"
+        }
+      ],
+      "hidden": false
+    },
+    {
       "id": "w-019p9b",
       "title": "Рілс «Супровід гранту»",
       "category": "reels",
