@@ -22,14 +22,16 @@
       "covers": "Обкладинки",
       "stories": "Сторіс",
       "carousels": "Каруселі",
-      "landings": "Лендінги"
+      "landings": "Лендінги",
+      "youtube": "YouTube моушн"
     },
     "services": {
       "reels": "Монтаж, моушн, субтитри",
       "covers": "Єдиний стиль стрічки",
       "stories": "Прогріви та анонси",
       "carousels": "Експертні пости",
-      "landings": "Дизайн і верстка"
+      "landings": "Дизайн і верстка",
+      "youtube": "Моушн-графіка та монтаж для YouTube"
     }
   },
   "works": [

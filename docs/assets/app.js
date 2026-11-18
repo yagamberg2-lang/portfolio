@@ -46,7 +46,9 @@ async function load() {
     const d = await r.json();
     S = { ...DEFAULTS, ...(d.settings || {}) };
     S.contacts = { ...DEFAULTS.contacts, ...(d.settings?.contacts || {}) };
-    S.categories = { ...DEFAULTS.categories, ...(d.settings?.categories || {}) };
+    // категорії повністю керуються з адмінки (порядок = порядок у налаштуваннях)
+    const c = d.settings?.categories;
+    S.categories = c && Object.keys(c).length ? c : DEFAULTS.categories;
     S.services = { ...DEFAULTS.services, ...(d.settings?.services || {}) };
     WORKS = (d.works || []).filter(w => !w.hidden && w.media?.length);
   } catch (e) { console.warn('Не вдалося завантажити works.json', e); }
@@ -76,7 +78,7 @@ function applySettings() {
   $('.hero-stats').innerHTML = stats.map(k => `<div class="stat"><b>${String(cnt[k]).padStart(2, '0')}</b><span>${esc(S.categories[k])}</span></div>`).join('');
   // services
   $('.services').innerHTML = Object.entries(S.categories).map(([k, v], i) =>
-    `<li data-cat="${k}"><span>0${i + 1}</span><span>${esc(v)}</span><em>${esc(S.services[k] || '')}</em></li>`).join('');
+    `<li data-cat="${k}"><span>${String(i + 1).padStart(2, '0')}</span><span>${esc(v)}</span><em>${esc(S.services[k] || '')}</em></li>`).join('');
   $$('.services li').forEach(li => li.addEventListener('click', () => { setFilter(li.dataset.cat); $('#works').scrollIntoView({ behavior: 'smooth' }); }));
   // marquee
   const m = esc(S.marquee || DEFAULTS.marquee);
@@ -145,7 +147,7 @@ function renderGrid() {
     const card = el('article', 'card');
     card.dataset.cat = w.category; card.dataset.id = w.id;
     const multi = w.media.length > 1;
-    const right = m.type === 'video' && !multi ? '<span class="card-play"></span>' : multi ? `<span class="card-count">${w.media.length} ${plural(w.media.length)}</span>` : '';
+    const right = (m.type === 'video' || m.type === 'youtube') && !multi ? '<span class="card-play"></span>' : multi ? `<span class="card-count">${w.media.length} ${plural(w.media.length)}</span>` : '';
     card.innerHTML = `
       <div class="card-inner" tabindex="0" role="button" aria-label="${esc(w.title || 'Робота')}">
         <div class="card-media" style="padding-top:${(aspectOf(w) * 100).toFixed(2)}%">
@@ -213,6 +215,7 @@ function openWork(id, push = true) {
   $('.lb-desc').textContent = w.description || '';
   const link = $('.lb-link');
   link.hidden = !w.link; if (w.link) link.href = w.link;
+  link.textContent = /youtu\.?be/.test(w.link || '') ? 'Дивитись на YouTube ↗' : 'Відкрити сайт ↗';
   const many = w.media.length > 1;
   $$('.lb-arrow').forEach(b => b.hidden = !many);
   $('.lb-dots').innerHTML = many ? w.media.map((_, i) => `<button aria-label="Слайд ${i + 1}"></button>`).join('') : '';
@@ -232,7 +235,8 @@ function showSlide(i, instant) {
   const build = () => {
     $$('video', box).forEach(v => v.pause());
     let html;
-    if (m.type === 'video') html = `<video src="${esc(m.src)}" poster="${esc(m.poster || '')}" controls playsinline autoplay loop></video>`;
+    if (m.type === 'youtube') html = `<div class="lb-yt"><iframe src="https://www.youtube-nocookie.com/embed/${esc(m.yt)}?autoplay=1&rel=0" title="YouTube" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    else if (m.type === 'video') html = `<video src="${esc(m.src)}" poster="${esc(m.poster || '')}" controls playsinline autoplay loop></video>`;
     else if (w.category === 'landings' && m.h / m.w > 1.6) html = `<div class="lb-scroll"><img src="${esc(m.src)}" alt=""></div>`;
     else html = `<img src="${esc(m.src)}" alt="${esc(w.title || '')}">`;
     box.innerHTML = html;

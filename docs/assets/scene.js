@@ -6,8 +6,10 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-const ACCENT = new THREE.Color('#ff6a3d');
-const ACCENT2 = new THREE.Color('#9d86ff');
+const ACCENT = new THREE.Color('#FED7A5');   // кремовий
+const TERRA = new THREE.Color('#9E6752');    // теракота
+const BLUE = new THREE.Color('#2D4354');     // глибокий синій
+const ACCENT2 = new THREE.Color('#5d86a3');  // світліший відтінок #2D4354 для відблисків
 
 const NOISE = /* glsl */`
 vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -47,16 +49,35 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
   renderer.toneMappingExposure = 1.0;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#060608');
+  scene.background = new THREE.Color('#20212B');
   const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 120);
   camera.position.set(0, 2, 26);
 
   const world = new THREE.Group(); scene.add(world);
 
+  // ---------- небо-градієнт з палітри: синій → сливовий → теракотова смуга → графіт ----------
+  const skyMat = new THREE.ShaderMaterial({
+    uniforms: { uTop: { value: BLUE }, uMid: { value: new THREE.Color('#534145') }, uBand: { value: TERRA }, uCream: { value: ACCENT }, uLow: { value: new THREE.Color('#73766A') }, uBot: { value: new THREE.Color('#20212B') } },
+    vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+    fragmentShader: /* glsl */`
+      uniform vec3 uTop, uMid, uBand, uCream, uLow, uBot; varying vec3 vDir;
+      void main(){
+        float y = vDir.y;
+        vec3 c = mix(uMid, uTop, smoothstep(0.05, 0.75, y));
+        c = mix(c, uBand, smoothstep(0.22, 0.0, abs(y - 0.02)) * 0.85);
+        c += uCream * smoothstep(0.06, 0.0, abs(y - 0.0)) * 0.22;
+        c = mix(c, mix(uLow, uBot, smoothstep(-0.05, -0.5, y)), smoothstep(0.0, -0.12, y));
+        gl_FragColor = vec4(c * 0.62, 1.0);
+      }`,
+    side: THREE.BackSide, depthWrite: false
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(80, 48, 24), skyMat);
+  scene.add(sky);
+
   // ---------- рідке ядро ----------
   const coreMat = new THREE.ShaderMaterial({
     uniforms: { uTime: { value: 0 }, uAmp: { value: 0.32 }, uPulse: { value: 0 }, uMouse: { value: new THREE.Vector3(0, 0, 2) },
-      uCamPos: { value: new THREE.Vector3() }, uAccent: { value: ACCENT }, uAccent2: { value: ACCENT2 } },
+      uCamPos: { value: new THREE.Vector3() }, uAccent: { value: TERRA }, uAccent2: { value: ACCENT2 }, uCream: { value: ACCENT } },
     vertexShader: NOISE + /* glsl */`
       uniform float uTime, uAmp, uPulse; uniform vec3 uMouse;
       varying vec3 vN; varying vec3 vPos; varying float vNoise;
@@ -84,7 +105,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
         gl_Position = projectionMatrix * viewMatrix * wp;
       }`,
     fragmentShader: /* glsl */`
-      uniform vec3 uCamPos, uAccent, uAccent2; uniform float uTime;
+      uniform vec3 uCamPos, uAccent, uAccent2, uCream; uniform float uTime;
       varying vec3 vN; varying vec3 vPos; varying float vNoise;
       void main(){
         vec3 V = normalize(uCamPos - vPos);
@@ -93,17 +114,17 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
         float fres = pow(1.0 - ndv, 2.4);
         vec3 film = 0.5 + 0.5*cos(6.2831*(vec3(0.0,0.33,0.67) + fres*0.8 + vNoise*0.9 + uTime*0.025));
         vec3 tint = mix(uAccent, uAccent2, 0.5 + 0.5*sin(vNoise*5.0 + uTime*0.3));
-        vec3 irid = mix(film, tint, 0.55);
+        vec3 irid = mix(film, tint, 0.8);
         vec3 L = normalize(vec3(-0.6, 0.9, 0.7));
         vec3 H = normalize(L + V);
         float spec = pow(max(dot(N, H), 0.0), 90.0);
         float spec2 = pow(max(dot(N, normalize(normalize(vec3(0.9,-0.2,0.5)) + V)), 0.0), 24.0);
         vec3 L2 = normalize(vec3(0.9, -0.35, -0.5));
         float back = pow(max(dot(N, L2), 0.0), 2.0) * fres;
-        vec3 col = vec3(0.008, 0.008, 0.012);
+        vec3 col = vec3(0.012, 0.013, 0.02);
         col += max(dot(N, L), 0.0) * 0.03;
         col += irid * pow(fres, 1.6) * 0.7;
-        col += spec * 1.6 + spec2 * uAccent * 0.25;
+        col += spec * uCream * 1.6 + spec2 * uCream * 0.3;
         col += back * uAccent * 2.4;
         float band = smoothstep(0.0, 0.02, abs(fract(vNoise*4.0 + fres*1.5) - 0.5) - 0.47);
         col += band * irid * 0.25 * fres;
@@ -114,14 +135,16 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
   world.add(core);
 
   // тонкі орбіти навколо ядра
-  const orbitMat = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+  const orbitMat = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, depthWrite: false });
   const orbit1 = new THREE.Mesh(new THREE.TorusGeometry(2.05, 0.006, 6, 220), orbitMat);
   const orbit2 = new THREE.Mesh(new THREE.TorusGeometry(2.45, 0.004, 6, 220), new THREE.MeshBasicMaterial({ color: ACCENT2, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false }));
   orbit1.rotation.set(1.25, 0.2, 0); orbit2.rotation.set(1.9, -0.5, 0.3);
   world.add(orbit1, orbit2);
 
   // ---------- картки робіт ----------
-  const src = works.filter(w => w.featured).length >= 4 ? works.filter(w => w.featured) : works;
+  // YouTube-обкладинки не мають CORS, тож у 3D-кільце беремо лише власні файли
+  const own = works.filter(w => w.media[0].type !== 'youtube');
+  const src = own.filter(w => w.featured).length >= 4 ? own.filter(w => w.featured) : own;
   let ringWorks = src.slice(0, 14);
   if (ringWorks.length) while (ringWorks.length < 8) ringWorks = ringWorks.concat(ringWorks).slice(0, 8);
   const N = ringWorks.length;
@@ -204,7 +227,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
   pGeo.setAttribute('aSize', new THREE.BufferAttribute(pSize, 1));
   pGeo.setAttribute('aSeed', new THREE.BufferAttribute(pSeed, 1));
   const pMat = new THREE.ShaderMaterial({
-    uniforms: { uTime: { value: 0 }, uPR: { value: DPR }, uFocus: { value: 10 }, uRise: { value: 0 }, uA: { value: ACCENT }, uB: { value: ACCENT2 } },
+    uniforms: { uTime: { value: 0 }, uPR: { value: DPR }, uFocus: { value: 10 }, uRise: { value: 0 }, uA: { value: TERRA }, uB: { value: ACCENT2 } },
     vertexShader: /* glsl */`
       attribute float aSize, aSeed; uniform float uTime, uPR, uFocus, uRise;
       varying float vAlpha, vSeed, vCoc;
@@ -228,7 +251,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
         float d = length(gl_PointCoord - 0.5);
         float disc = smoothstep(0.5, 0.42 - min(vCoc,1.0)*0.12, d);
         float ring = smoothstep(0.5, 0.44, d) * smoothstep(0.3, 0.46, d) * min(vCoc, 1.0) * 0.6;
-        vec3 c = vSeed < 0.12 ? uA : vSeed < 0.22 ? uB : vec3(1.0, 0.96, 0.9);
+        vec3 c = vSeed < 0.12 ? uA : vSeed < 0.22 ? uB : vec3(1.0, 0.86, 0.68);
         gl_FragColor = vec4(c * (disc*0.7 + ring), vAlpha * (disc*0.7 + ring));
       }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
@@ -237,7 +260,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
 
   // ---------- підлога-сітка ----------
   const floorMat = new THREE.ShaderMaterial({
-    uniforms: { uTime: { value: 0 }, uA: { value: ACCENT } },
+    uniforms: { uTime: { value: 0 }, uA: { value: TERRA } },
     vertexShader: `varying vec3 vW; void main(){ vec4 w = modelMatrix*vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix*viewMatrix*w; }`,
     fragmentShader: /* glsl */`
       uniform float uTime; uniform vec3 uA; varying vec3 vW;
@@ -249,7 +272,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
         float fade = smoothstep(26.0, 2.0, r);
         float glow = smoothstep(7.0, 0.0, r);
         float wave = 0.5 + 0.5*sin(r*1.4 - uTime*1.6);
-        vec3 col = vec3(0.055) * line * fade + uA * glow * glow * 0.05 + uA * line * glow * wave * 0.22;
+        vec3 col = vec3(0.07, 0.075, 0.07) * line * fade + uA * glow * glow * 0.05 + uA * line * glow * wave * 0.22;
         gl_FragColor = vec4(col, 1.0);
       }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
