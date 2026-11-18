@@ -162,7 +162,9 @@ section{position:relative}
 .contact-links a>*{position:relative}
 .contact-links small{font-size:12px;font-weight:500;color:var(--muted);transition:color .4s}
 .contact-links a:hover small{color:var(--plum)}
-.footer{display:flex;justify-content:space-between;padding:clamp(60px,12vh,140px) var(--pad) 28px;color:var(--muted);font-size:13px}
+.footer-credit{font-size:11px;opacity:.7;text-align:center}
+.footer-credit a{text-decoration:underline;text-underline-offset:2px}
+.footer{display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;padding:clamp(60px,12vh,140px) var(--pad) 28px;color:var(--muted);font-size:13px}
 
 /* lightbox */
 .lb{position:fixed;inset:0;z-index:80;display:grid;grid-template-columns:1fr minmax(280px,380px);gap:0}

@@ -5,6 +5,9 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const ACCENT = new THREE.Color('#FED7A5');   // кремовий
 const TERRA = new THREE.Color('#9E6752');    // теракота
@@ -133,6 +136,53 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
   });
   const core = new THREE.Mesh(new THREE.IcosahedronGeometry(1.35, isTouch ? 48 : 80), coreMat);
   world.add(core);
+
+  // ---------- 3D-мозок (models/brain.glb). Поки модель вантажиться або якщо її немає — показуємо рідке ядро ----------
+  const brain = new THREE.Group(); brain.visible = false; world.add(brain);
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const brainMat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color('#c27d68'), roughness: 0.5, metalness: 0,
+    clearcoat: 0.45, clearcoatRoughness: 0.28,
+    sheen: 0.6, sheenColor: new THREE.Color('#FED7A5'), sheenRoughness: 0.5,
+    envMap: envTex, envMapIntensity: 0.28
+  });
+  // фресенель-кайма в кольорах палітри (як у ядра)
+  brainMat.onBeforeCompile = sh => {
+    sh.uniforms.uRimA = { value: TERRA }; sh.uniforms.uRimB = { value: ACCENT2 };
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform vec3 uRimA, uRimB;')
+      .replace('#include <opaque_fragment>', `
+        float rimF = pow(1.0 - saturate(dot(normalize(normal), normalize(vViewPosition))), 2.6);
+        outgoingLight += mix(uRimA * 1.6, uRimB * 1.2, saturate(normalize(vViewPosition).y * 0.5 + 0.5)) * rimF;
+        #include <opaque_fragment>`);
+  };
+  const key = new THREE.DirectionalLight('#FED7A5', 3.4); key.position.set(-4, 5, 3);
+  const rim = new THREE.DirectionalLight('#9E6752', 3.5); rim.position.set(4, -1, -5);
+  const fill = new THREE.HemisphereLight('#5d86a3', '#534145', 0.35);
+  world.add(key, rim, fill);
+  let brainReady = false;
+  const brainLoad = new Promise(res => {
+    const gl = new GLTFLoader();
+    const draco = new DRACOLoader(); draco.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/libs/draco/gltf/');
+    gl.setDRACOLoader(draco);
+    gl.load(new URL('../models/brain.glb', import.meta.url).href, g => {
+      const m = g.scene;
+      m.traverse(o => {
+        if (!o.isMesh) return;
+        if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();
+        o.material = brainMat;
+      });
+      // центруємо й масштабуємо під розмір ядра
+      const box = new THREE.Box3().setFromObject(m), size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+      m.position.sub(c);
+      const s = 3.0 / Math.max(size.x, size.y, size.z);
+      const pivot = new THREE.Group(); pivot.add(m); pivot.scale.setScalar(s);
+      brain.add(pivot);
+      brain.visible = true; core.visible = false; brainReady = true;
+      res();
+    }, undefined, () => res());
+  });
 
   // тонкі орбіти навколо ядра
   const orbitMat = new THREE.MeshBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -429,6 +479,15 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
     coreMat.uniforms.uCamPos.value.copy(camera.position);
     core.rotation.y = t * 0.08; core.rotation.x = Math.sin(t * 0.13) * 0.2;
     core.scale.setScalar((0.35 + 0.65 * intro) * (1 - he * 0.12));
+    if (brainReady) {
+      // повільне обертання, нахил за мишею, «дихання» та імпульс при кліку
+      brain.rotation.y = damp(brain.rotation.y, t * 0.12 + state.mouseX * 0.5, 3, dt);
+      brain.rotation.x = damp(brain.rotation.x, -0.12 - state.mouseY * 0.25 + Math.sin(t * 0.2) * 0.05, 3, dt);
+      brain.rotation.z = Math.sin(t * 0.15) * 0.04;
+      brain.position.y = Math.sin(t * 0.7) * 0.06;
+      const breathe = 1 + Math.sin(t * 1.3) * 0.012 + pulseV * 0.06;
+      brain.scale.setScalar((0.35 + 0.65 * intro) * (1 - he * 0.12) * breathe);
+    }
     orbit1.rotation.z = t * 0.21; orbit2.rotation.z = -t * 0.15;
     orbit1.scale.setScalar(0.4 + 0.6 * intro); orbit2.scale.setScalar(0.3 + 0.7 * intro);
 
@@ -492,7 +551,7 @@ export async function createScene({ canvas, works, state, isTouch, reduced, onOp
     composer.render(dt);
   }
 
-  await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 5000))]);
+  await Promise.race([Promise.all([...loads, brainLoad]), new Promise(r => setTimeout(r, 7000))]);
   frame();
 
   return {
