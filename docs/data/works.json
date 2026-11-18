@@ -1,0 +1,264 @@
+{
+  "settings": {
+    "name": "Портфоліо",
+    "role": "Моушн-дизайн · контент для Instagram",
+    "heroLines": [
+      "Контент,",
+      "що рухає",
+      "увагу"
+    ],
+    "tagline": "Рілс, сторіс, обкладинки, каруселі та лендінги для брендів і експертів.",
+    "about": "Створюю візуальний контент для Instagram: від моушн-рілс до лендінгів. Поєдную дизайн, анімацію та сторітелінг, щоб ваш бренд помічали й запамʼятовували.",
+    "cta": "Обговорімо ваш проєкт",
+    "marquee": "Відкрито до нових проєктів",
+    "contacts": {
+      "telegram": "",
+      "instagram": "",
+      "email": "",
+      "phone": ""
+    },
+    "categories": {
+      "reels": "Рілс",
+      "covers": "Обкладинки",
+      "stories": "Сторіс",
+      "carousels": "Каруселі",
+      "landings": "Лендінги"
+    },
+    "services": {
+      "reels": "Монтаж, моушн, субтитри",
+      "covers": "Єдиний стиль стрічки",
+      "stories": "Прогріви та анонси",
+      "carousels": "Експертні пости",
+      "landings": "Дизайн і верстка"
+    }
+  },
+  "works": [
+    {
+      "id": "w-019p9b",
+      "title": "Рілс «Супровід гранту»",
+      "category": "reels",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/rils-hrant-suprovid-35e93b.mp4",
+          "poster": "media/rils-hrant-suprovid-35e93b.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 26.4,
+          "original": "рілс грант супровід.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-02eweh",
+      "title": "Рілс «ФОП 3 група»",
+      "category": "reels",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/fop-3-hruppa-824530.mp4",
+          "poster": "media/fop-3-hruppa-824530.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 17,
+          "original": "фоп 3 группа.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-03ggtz",
+      "title": "Рілс «Цифри та документи»",
+      "category": "reels",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/ryls-1-3a7759.mp4",
+          "poster": "media/ryls-1-3a7759.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 30,
+          "original": "рилс 1.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-04suns",
+      "title": "Рілс «Документи та звіти»",
+      "category": "reels",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/ryls-2-43f9a5.mp4",
+          "poster": "media/ryls-2-43f9a5.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 29.2,
+          "original": "рилс 2.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-05ccch",
+      "title": "Моушн-рілс «Хтось оплатив»",
+      "category": "reels",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/1-6957cd.mp4",
+          "poster": "media/1-6957cd.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 22.1,
+          "original": "1.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-06npgk",
+      "title": "Моушн-рілс «Не так просто»",
+      "category": "reels",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/2-3bb142.mp4",
+          "poster": "media/2-3bb142.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 20.4,
+          "original": "2.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-07ucrt",
+      "title": "Моушн-рілс «Правильно»",
+      "category": "reels",
+      "client": "",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "video",
+          "src": "media/3-970f6a.mp4",
+          "poster": "media/3-970f6a.jpg",
+          "w": 720,
+          "h": 1280,
+          "duration": 21.3,
+          "original": "3.mp4"
+        }
+      ]
+    },
+    {
+      "id": "w-08cwdr",
+      "title": "Обкладинка рілс — світла",
+      "category": "covers",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/obkladynka-ryls-1-svitla-525eb7.webp",
+          "poster": "media/obkladynka-ryls-1-svitla-525eb7.webp",
+          "w": 1080,
+          "h": 1920,
+          "original": "обкладинка рилс 1 (світла).png"
+        }
+      ]
+    },
+    {
+      "id": "w-09pv5x",
+      "title": "Обкладинка рілс — темна",
+      "category": "covers",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/obkladynka-ryls-2-temna-438ac0.webp",
+          "poster": "media/obkladynka-ryls-2-temna-438ac0.webp",
+          "w": 1080,
+          "h": 1920,
+          "original": "обкладинка рилс 2 (темна).png"
+        }
+      ]
+    },
+    {
+      "id": "w-1098k0",
+      "title": "Серія сторіс «Гранти»",
+      "category": "stories",
+      "client": "FinSmile",
+      "year": "2026",
+      "description": "",
+      "link": "",
+      "featured": true,
+      "media": [
+        {
+          "type": "image",
+          "src": "media/storis-1-e6212a.webp",
+          "poster": "media/storis-1-e6212a.webp",
+          "w": 1080,
+          "h": 1920,
+          "original": "сторіс 1.png"
+        },
+        {
+          "type": "image",
+          "src": "media/storis-2-5d0a0a.webp",
+          "poster": "media/storis-2-5d0a0a.webp",
+          "w": 1080,
+          "h": 1920,
+          "original": "сторіс 2.png"
+        },
+        {
+          "type": "image",
+          "src": "media/storis-3-ryls-1-782d7b.webp",
+          "poster": "media/storis-3-ryls-1-782d7b.webp",
+          "w": 1080,
+          "h": 1920,
+          "original": "сторіс 3 (рилс 1).png"
+        }
+      ]
+    }
+  ],
+  "ignored": [
+    "FinSmile_reels.mp4",
+    "FinSmile_reels_2.mp4"
+  ]
+}
